@@ -2,12 +2,15 @@ import React from 'react'
 // import PropTypes from 'prop-types'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
+import * as apiActions from 'api-actions'
+import { onMount } from 'lp-hoc'
+import { selectors } from '../reducer'
 
 const propTypes = {}
 
 const defaultProps = {}
 
-function Home () {
+function Home ({movies}) {
   return (
     <div>
       <h1> Hello world! </h1>
@@ -22,12 +25,21 @@ Home.propTypes = propTypes
 
 Home.defaultProps = defaultProps
 
-function mapStateToProps () {
-  return {}
+function mapStateToProps (state) {
+  return {
+    movies: selectors.movies(state)
+  }
 }
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+  fetchAllMovies: apiActions.fetchAllMovies
+}
+
+function componentDidMount (props) {
+   props.fetchAllMovies()
+ }
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps)
+  connect(mapStateToProps, mapDispatchToProps),
+  onMount(componentDidMount)
 )(Home)
